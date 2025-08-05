@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/register.css';
 
 export default function Register() {
@@ -15,7 +17,7 @@ export default function Register() {
 
     const emailExists = users.some(user => user.email === email);
     if (emailExists) {
-      alert('This email is already registered.');
+      toast.error('This email is already registered.');
       return;
     }
 
@@ -23,12 +25,17 @@ export default function Register() {
     users.push(newUser);
     localStorage.setItem('registeredUsers', JSON.stringify(users));
 
-    alert('Registration successful!');
-    navigate('/login');
+    toast.success('Registration successful! Redirecting to login...');
+    
+    setTimeout(() => {
+      navigate('/login');
+    }, 2000); // Wait 2 seconds before navigating
   };
 
   return (
     <div className="form-container">
+      <ToastContainer position="top-right" autoClose={2000} />
+      
       <h2>Register</h2>
       <form className="auth-form" onSubmit={handleRegister}>
         <input
