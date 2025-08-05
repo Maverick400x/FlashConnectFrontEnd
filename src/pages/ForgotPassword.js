@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, Toaster } from 'react-hot-toast';
 import '../styles/login.css';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleResetPassword = (e) => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setMessage('Passwords do not match.');
+      toast.error('Passwords do not match.');
       return;
     }
 
     const storedUsers = localStorage.getItem('registeredUsers');
     const users = storedUsers ? JSON.parse(storedUsers) : [];
+
+    const userExists = users.some((user) => user.email === email);
+
+    if (!userExists) {
+      toast.error('No account found with that email.');
+      return;
+    }
 
     const updatedUsers = users.map((user) => {
       if (user.email === email) {
@@ -27,15 +34,8 @@ export default function ForgotPassword() {
       return user;
     });
 
-    const userExists = users.some((user) => user.email === email);
-
-    if (!userExists) {
-      setMessage('No account found with that email.');
-      return;
-    }
-
     localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
-    setMessage('Password successfully updated. Redirecting to login...');
+    toast.success('Password successfully updated. Redirecting to login...');
 
     setTimeout(() => {
       navigate('/login');
@@ -44,6 +44,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="form-container">
+      <Toaster position="top-right" reverseOrder={false} />
       <h2>Reset Password</h2>
       <form className="auth-form" onSubmit={handleResetPassword}>
         <input
@@ -67,7 +68,6 @@ export default function ForgotPassword() {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
-        {message && <p className="form-message">{message}</p>}
         <button type="submit">Reset Password</button>
       </form>
     </div>
