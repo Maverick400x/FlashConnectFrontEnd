@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './components/Dashboard';
 import ForgotPassword from './pages/ForgotPassword'; // ✅ Import the forgot password page
+import Messages from "./pages/Messages";
+
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // ✅ Protected route wrapper
@@ -20,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} /> {/* ✅ New Route */}
+          <Route path="/messages" element={<Messages />} />
 
           <Route 
             path="/dashboard" 

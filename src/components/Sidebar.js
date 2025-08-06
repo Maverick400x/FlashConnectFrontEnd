@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/dashboard.css"; // Reuse the same CSS
+import { NavLink, useNavigate } from "react-router-dom";
+import "../styles/dashboard.css";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -14,11 +14,36 @@ export default function Sidebar() {
     <aside className="sidebar">
       <h2 className="logo">Flash Connect</h2>
       <nav className="nav-links">
-        <Link to="/dashboard" className="nav-item active">Dashboard</Link>
-        <Link to="/messages" className="nav-item">Messages</Link>
-        <Link to="/profile" className="nav-item">Profile</Link>
-        <Link to="/settings" className="nav-item">Settings</Link>
-        <Link to="/help" className="nav-item">Help</Link>
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+        >
+          Dashboard
+        </NavLink>
+        <NavLink
+          to="/messages"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+        >
+          Messages
+        </NavLink>
+        <NavLink
+          to="/profile"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+        >
+          Profile
+        </NavLink>
+        <NavLink
+          to="/settings"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+        >
+          Settings
+        </NavLink>
+        <NavLink
+          to="/help"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+        >
+          Help
+        </NavLink>
         <button className="nav-item logout-button" onClick={handleLogout}>
           Logout
         </button>
