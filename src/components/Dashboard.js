@@ -10,7 +10,7 @@ export default function Dashboard() {
   const [users] = useState([
     "John Doe", "Jane Smith", "Alice Johnson", "Robert Brown",
     "Emily Davis", "Michael Wilson", "Sarah Miller", "David Garcia",
-    "Laura Martinez", "James Anderson", "Linda Taylor", "William Thomas",
+    "Laura Martinez", "James Anderso n", "Linda Taylor", "William Thomas",
     "Patricia Jackson", "Charles White", "Jessica Harris", "Daniel Clark",
     "Matthew Lewis", "Christopher Robinson",
   ]);
