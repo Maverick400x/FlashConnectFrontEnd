@@ -98,7 +98,7 @@ export default function Messages() {
                 type="text"
                 placeholder="Type a message..."
               />
-              <button disabled>Send</button>
+              <button>Send</button>
             </div>
           </div>
         </div>
