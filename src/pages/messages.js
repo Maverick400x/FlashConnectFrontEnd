@@ -97,7 +97,6 @@ export default function Messages() {
               <input
                 type="text"
                 placeholder="Type a message..."
-                disabled
               />
               <button disabled>Send</button>
             </div>
