@@ -4,7 +4,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/register.css';
 
-// Font Awesome Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
@@ -14,16 +13,57 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(''); // 'weak', 'medium', 'strong'
 
   const navigate = useNavigate();
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    setPasswordStrength(checkPasswordStrength(value));
+  };
+
+  const checkPasswordStrength = (password) => {
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    const mediumRegex = /^(?=.*[a-z])(?=.*\d).{6,}$/;
+
+    if (strongRegex.test(password)) return 'strong';
+    else if (mediumRegex.test(password)) return 'medium';
+    else return 'weak';
+  };
+
+  const getStrengthStyle = (strength) => {
+    switch (strength) {
+      case 'strong':
+        return { width: '100%', backgroundColor: 'green' };
+      case 'medium':
+        return { width: '66%', backgroundColor: 'orange' };
+      case 'weak':
+        return { width: '33%', backgroundColor: 'red' };
+      default:
+        return { width: '0%', backgroundColor: 'transparent' };
+    }
+  };
 
   const handleRegister = (e) => {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
     const emailExists = users.some(user => user.email === email);
+    const usernameExists = users.some(user => user.username === username);
+
     if (emailExists) {
       toast.error('This email is already registered.');
+      return;
+    }
+
+    if (usernameExists) {
+      toast.error('This username is already taken.');
+      return;
+    }
+
+    if (passwordStrength === 'weak') {
+      toast.error('Please choose a stronger password.');
       return;
     }
 
@@ -32,10 +72,9 @@ export default function Register() {
     localStorage.setItem('registeredUsers', JSON.stringify(users));
 
     toast.success('Registration successful! Redirecting to login...');
-    
     setTimeout(() => {
       navigate('/login');
-    }, 2000); // Wait 2 seconds before navigating
+    }, 2000);
   };
 
   return (
@@ -70,7 +109,7 @@ export default function Register() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
           <button
@@ -82,6 +121,15 @@ export default function Register() {
             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
           </button>
         </div>
+
+        {/* Password Strength Bar */}
+        {password && (
+          <div className="password-strength-bar">
+            <div className="bar" style={getStrengthStyle(passwordStrength)}></div>
+            <span className="strength-label">{passwordStrength.toUpperCase()}</span>
+          </div>
+        )}
+
         <button type="submit">Register</button>
       </form>
       <p className="form-footer">

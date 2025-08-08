@@ -123,3 +123,43 @@
 .toggle-password:focus {
   outline: none;
 }
+
+.password-strength-bar {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  height: 8px;
+  width: 100%;
+  background-color: #eee;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.password-strength-bar .bar {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.strength-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #333;
+  text-align: right;
+}
+
+.match-status {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.match-status.match {
+  color: #28a745; /* Bootstrap green */
+}
+
+.match-status.mismatch {
+  color: #dc3545; /* Bootstrap red */
+}
