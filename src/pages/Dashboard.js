@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
-import CardSection from "../components/Card"; // import Card component
+import CardSection from "../components/Card";
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  // 🔍 Handle search input
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -34,20 +35,25 @@ export default function Dashboard() {
     }
   };
 
+  // 🔗 Handle connection request
   const handleConnect = (user) => {
-    alert(`Connection request sent to ${user}`);
+    alert(`🔗 Connection request sent to ${user}`);
   };
 
+  // 🔔 Navigate to messages
   const handleBellClick = () => {
     navigate("/messages");
   };
 
   return (
     <div className="dashboard-container">
+      {/* Sidebar Navigation */}
       <Sidebar />
 
+      {/* Main Dashboard Content */}
       <main className="main-content">
-        {/* Notification Bell */}
+        
+        {/* 🔔 Notification Bell with Dropdown */}
         <div
           className="notification-bell-wrapper"
           onMouseEnter={() => setShowDropdown(true)}
@@ -57,19 +63,20 @@ export default function Dashboard() {
             <FaBell className="bell-icon" />
             <span className="notification-count">3</span>
           </div>
+
           {showDropdown && (
             <div className="notification-dropdown">
               <p><strong>Notifications</strong></p>
               <ul>
-                <li>You have a new message from Alice</li>
-                <li>John sent a connection request</li>
-                <li>Reminder: Complete your profile</li>
+                <li>📩 New message from Alice</li>
+                <li>👤 John sent a connection request</li>
+                <li>📌 Reminder: Complete your profile</li>
               </ul>
             </div>
           )}
         </div>
 
-        {/* Search Users */}
+        {/* 👥 User Search Bar */}
         <div className="search-users">
           <input
             type="text"
@@ -78,6 +85,8 @@ export default function Dashboard() {
             onChange={handleSearchChange}
             className="search-input"
           />
+
+          {/* 🔍 Dynamic Search Result List */}
           {searchTerm && (
             <ul className="search-results">
               {filteredUsers.length > 0 ? (
@@ -99,7 +108,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Professional Cards */}
+        {/* 💼 Card Section */}
         <h2 className="section-title">Connect with Professionals</h2>
         <CardSection />
       </main>

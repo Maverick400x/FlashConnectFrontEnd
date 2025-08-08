@@ -235,7 +235,7 @@ body {
 .logout-button:hover {
   background-color: #d93d3d;
 }
-
+/* notification bell */
 .notification-bell-wrapper {
   position: absolute;
   top: 20px;

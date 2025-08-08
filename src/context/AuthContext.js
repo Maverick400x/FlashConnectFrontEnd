@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+// Create the context
 const AuthContext = createContext();
 
+// Create the AuthProvider to wrap around your app
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('authUser');
@@ -18,6 +20,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Optional: Rehydrate on mount (extra safety, especially useful during development)
   useEffect(() => {
     const storedUser = localStorage.getItem('authUser');
     if (storedUser) {
@@ -25,11 +28,20 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const isLoggedIn = !!user;
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// Custom hook to use auth context safely
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
