@@ -97,3 +97,29 @@
 .success-input {
   border: 1.5px solid green;
 }
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 40px; /* Space for eye icon */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0px;
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px;
+}
+
+.toggle-password:focus {
+  outline: none;
+}
