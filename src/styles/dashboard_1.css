@@ -1,0 +1,46 @@
+.user-info {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.user-name {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.welcome-message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+.sidebar-icon {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.user-info {
+  text-align: center;
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}

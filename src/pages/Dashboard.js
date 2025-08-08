@@ -4,6 +4,7 @@ import { FaBell } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import CardSection from "../components/Card";
 import "../styles/dashboard.css";
+import "../styles/dashboard_1.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
