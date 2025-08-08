@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
+import CardSection from "../components/Card"; // import Card component
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
@@ -75,6 +76,7 @@ export default function Dashboard() {
             placeholder="Search users to connect..."
             value={searchTerm}
             onChange={handleSearchChange}
+            className="search-input"
           />
           {searchTerm && (
             <ul className="search-results">
@@ -86,7 +88,7 @@ export default function Dashboard() {
                       className="connect-button"
                       onClick={() => handleConnect(user)}
                     >
-                      Let's Connect
+                      Connect
                     </button>
                   </li>
                 ))
@@ -96,6 +98,10 @@ export default function Dashboard() {
             </ul>
           )}
         </div>
+
+        {/* Professional Cards */}
+        <h2 className="section-title">Connect with Professionals</h2>
+        <CardSection />
       </main>
     </div>
   );
