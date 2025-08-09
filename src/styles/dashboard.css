@@ -101,47 +101,6 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
-
-/* Cards Section */
-.cards-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.card {
-  background: #ffffff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  transition: box-shadow 0.2s ease;
-}
-
-.card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.card h4 {
-  margin: 0 0 0.5rem;
-  color: #333;
-}
-
-.card p {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.card button {
-  margin-top: 1rem;
-  width: 100%;
-  padding: 0.5rem;
-  background: #1a73e8;
-  border: none;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
 /* Search Users Section */
 .search-users {
   width: 100%;
@@ -234,6 +193,7 @@ body {
 
 .logout-button:hover {
   background-color: #d93d3d;
+  color: #fff;
 }
 /* notification bell */
 .notification-bell-wrapper {
