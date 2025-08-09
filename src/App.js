@@ -5,7 +5,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import Messages from "./pages/Messages";
-import Profile from "./pages/Profile"; // ✅ Import the Profile page
+import Profile from "./pages/Profile"; 
+import Help from "./pages/Help";
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -52,6 +53,16 @@ function App() {
             } 
           />
 
+          {/* ✅ Help route */}
+          <Route 
+            path="/help" 
+            element={
+              <PrivateRoute>
+                <Help />
+              </PrivateRoute>
+            } 
+          />
+          
           {/* Redirect all other paths to dashboard if logged in, else login */}
           <Route 
             path="*" 
