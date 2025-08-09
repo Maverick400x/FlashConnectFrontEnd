@@ -46,10 +46,8 @@ export default function Sidebar() {
             alt="User Avatar"
             className="user-avatar"
           />
-          <p className="user-name">
-            Welcome <strong>{userData.username}</strong>
-          </p>
-          <p className="user-email">{userData.email}</p>
+          <p className="user-name">Welcome <strong>{userData.username}</strong></p>
+          <p className="user-email">Email : {userData.email}</p>
         </div>
       )}
 
