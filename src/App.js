@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import ForgotPassword from './pages/ForgotPassword'; // ✅ Import the forgot password page
+import ForgotPassword from './pages/ForgotPassword';
 import Messages from "./pages/Messages";
+import Profile from "./pages/Profile"; // ✅ Import the Profile page
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -21,8 +22,16 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} /> {/* ✅ New Route */}
-          <Route path="/messages" element={<Messages />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
+          <Route 
+            path="/messages" 
+            element={
+              <PrivateRoute>
+                <Messages />
+              </PrivateRoute>
+            } 
+          />
 
           <Route 
             path="/dashboard" 
@@ -33,7 +42,17 @@ function App() {
             } 
           />
 
-          {/* Redirect all other paths to dashboard if user is logged in, else to login */}
+          {/* ✅ Profile route */}
+          <Route 
+            path="/profile" 
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            } 
+          />
+
+          {/* Redirect all other paths to dashboard if logged in, else login */}
           <Route 
             path="*" 
             element={
