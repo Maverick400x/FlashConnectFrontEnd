@@ -7,11 +7,11 @@ import {
   FaCog,
   FaQuestionCircle,
   FaSignOutAlt,
-  FaBolt
-} from "react-icons/fa"; // Font Awesome icons
+  FaBolt,
+  FaUserFriends,
+} from "react-icons/fa";
 import "../styles/dashboard.css";
 
-// Default avatar image if user has no profile pic
 const DEFAULT_AVATAR =
   "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
@@ -20,7 +20,6 @@ export default function Sidebar() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Load user data from localStorage on component mount
     const storedUser = localStorage.getItem("authUser");
     if (storedUser) {
       try {
@@ -33,7 +32,6 @@ export default function Sidebar() {
   }, []);
 
   const handleLogout = () => {
-    // Clear user data and navigate to login page
     localStorage.removeItem("authUser");
     navigate("/login");
   };
@@ -56,7 +54,19 @@ export default function Sidebar() {
           <p className="user-name">
             Welcome <strong>{userData.fullName ?? userData.name ?? userData.username}</strong>
           </p>
-          <p className="user-email">Email: {userData.email}</p>
+          {/* <p className="user-email">Email: {userData.email}</p> */}
+
+          {/* Followers and Following - Side by Side */}
+          <div className="follow-stats-row">
+            <div className="follow-item">
+              <FaUserFriends className="follow-icon" />
+              <span><strong>{userData.followers ?? 0}</strong> Followers</span>
+            </div>
+            <div className="follow-item">
+              <FaUserFriends className="follow-icon" />
+              <span><strong>{userData.following ?? 0}</strong> Following</span>
+            </div>
+          </div>
         </div>
       )}
 

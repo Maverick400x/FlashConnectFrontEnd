@@ -1,133 +1,98 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { FaVideo } from "react-icons/fa";
 import "../styles/messages.css";
-import "../styles/dashboard.css"; // Ensure this is imported for the dashboard container styles
+import { FaVideo } from "react-icons/fa";
 
 export default function Messages() {
-  const [users, setUsers] = useState([]); // State to hold the list of all users
-  const [selectedUser, setSelectedUser] = useState(null); // State for the currently selected user
-  const [chatHistory, setChatHistory] = useState([]); // State for the chat history with the selected user
-  const [currentMessage, setCurrentMessage] = useState(""); // State for the message input field
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const loggedUserId = 1; // Replace with the actual logged-in user's ID
 
-  // Assuming a static user ID for the logged-in user for demonstration
-  // In a real app, this would come from a global state or context after login
-  const myUserId = 1;
-
-  // --- useEffect to Fetch All Users ---
+  // Fetch all users
   useEffect(() => {
-    const fetchAllUsers = async () => {
+    async function fetchUsers() {
       try {
-        const response = await fetch("http://localhost:8081/api/users");
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
-        }
-        const usersData = await response.json();
-        setUsers(usersData);
-        // Automatically select the first user if the list is not empty
-        if (usersData.length > 0) {
-          setSelectedUser(usersData[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
+        const res = await fetch("http://localhost:8081/api/users");
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const data = await res.json();
+        setUsers(data);
+      } catch (err) {
+        console.error("Error fetching users:", err);
       }
-    };
+    }
+    fetchUsers();
+  }, []);
 
-    fetchAllUsers();
-  }, []); // Empty dependency array means this runs only once on mount
-
-  // --- useEffect to Fetch Chat History for the Selected User ---
+  // Fetch chat history when a user is selected
   useEffect(() => {
-    if (selectedUser) {
-      const fetchChatHistory = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:8081/api/messages/chat?user1=${myUserId}&user2=${selectedUser.id}`
-          );
-          if (!response.ok) {
-            throw new Error("Failed to fetch chat history");
-          }
-          const chatData = await response.json();
-          setChatHistory(chatData);
-        } catch (error) {
-          console.error("Error fetching chat history:", error);
-          setChatHistory([]); // Clear chat on error
-        }
-      };
-      fetchChatHistory();
+    if (!selectedUser) return;
+
+    async function fetchChat() {
+      try {
+        const res = await fetch(
+          `http://localhost:8081/api/messages/chat?user1=${loggedUserId}&user2=${selectedUser.id}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch chat history");
+        const data = await res.json();
+        setMessages(data);
+      } catch (err) {
+        console.error("Error fetching chat:", err);
+      }
     }
-  }, [selectedUser, myUserId]); // Runs whenever the selectedUser changes
+    fetchChat();
+  }, [selectedUser]);
 
-  const handleUserSelect = (user) => {
-    setSelectedUser(user);
-  };
+  // Send message
+  async function handleSend() {
+    if (!newMessage.trim() || !selectedUser) return;
+    try {
+      const res = await fetch("http://localhost:8081/api/messages/sendMessages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          senderId: loggedUserId,
+          recipientId: selectedUser.id,
+          content: newMessage,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to send message");
 
-  const handleSendMessage = () => {
-    if (!currentMessage.trim() || !selectedUser) {
-      return;
+      // Refresh messages after sending
+      setNewMessage("");
+      const updatedMessages = await res.json();
+      setMessages((prev) => [...prev, updatedMessages]);
+    } catch (err) {
+      console.error("Error sending message:", err);
     }
-
-    // Here, you would call your backend API to send the message
-    // Example fetch call (not fully implemented):
-    // const response = await fetch("http://localhost:8081/api/messages/sendMessages", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     senderId: myUserId,
-    //     recipientId: selectedUser.id,
-    //     content: currentMessage,
-    //   }),
-    // });
-
-    // For now, let's just add it to the local state for a smoother UI
-    const newMessage = {
-      // These fields should match your backend's MessageResponseDTO
-      senderId: myUserId,
-      recipientId: selectedUser.id,
-      content: currentMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    setChatHistory([...chatHistory, newMessage]);
-    setCurrentMessage(""); // Clear the input field
-  };
+  }
 
   const handleVideoCall = () => {
     if (selectedUser) {
-      alert(`Starting video call with ${selectedUser.name}...`);
+      alert(`Starting video call with ${selectedUser.username}...`);
     }
-  };
-
-  // Helper function to get display name safely
-  const getDisplayName = (user) => {
-    return user?.name ?? user?.email ?? "Unknown User";
   };
 
   return (
     <div className="dashboard-container">
       <Sidebar />
-
       <main className="main-content">
         <div className="messages-wrapper">
           {/* Left: User List */}
           <div className="user-list">
-            {users.length > 0 ? (
-              users.map((user) => (
-                <div
-                  key={user.id}
-                  className={`user-item ${
-                    selectedUser?.id === user.id ? "active" : ""
-                  }`}
-                  onClick={() => handleUserSelect(user)}
-                >
-                  <h4>{getDisplayName(user)}</h4>
-                  {/* You'll likely need to fetch the last message for each user */}
-                  {/* <p>Last message placeholder...</p> */}
-                </div>
-              ))
-            ) : (
-              <p>No users available.</p>
-            )}
+            {users.map((user) => (
+              <div
+                key={user.id}
+                className={`user-item ${
+                  selectedUser?.id === user.id ? "active" : ""
+                }`}
+                onClick={() => setSelectedUser(user)}
+              >
+                <h4>{user.username}</h4>
+                <p>{user.email}</p>
+              </div>
+            ))}
           </div>
 
           {/* Right: Chat View */}
@@ -135,44 +100,39 @@ export default function Messages() {
             {selectedUser ? (
               <>
                 <div className="chat-header">
-                  <h3>{getDisplayName(selectedUser)}</h3>
+                  <h3>{selectedUser.username}</h3>
                   <button className="video-call-button" onClick={handleVideoCall}>
                     <FaVideo className="video-icon" />
                   </button>
                 </div>
                 <div className="chat-body">
-                  {chatHistory.length > 0 ? (
-                    chatHistory.map((msg, i) => (
+                  {messages.length > 0 ? (
+                    messages.map((msg, i) => (
                       <div
                         key={i}
                         className={`chat-bubble ${
-                          msg.senderId === myUserId ? "me" : "them"
+                          msg.senderId === loggedUserId ? "me" : "them"
                         }`}
                       >
                         {msg.content}
                       </div>
                     ))
                   ) : (
-                    <div className="no-messages">
-                      Start a conversation with {getDisplayName(selectedUser)}.
-                    </div>
+                    <p className="no-messages">No messages yet.</p>
                   )}
                 </div>
                 <div className="chat-footer">
                   <input
                     type="text"
                     placeholder="Type a message..."
-                    value={currentMessage}
-                    onChange={(e) => setCurrentMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
                   />
-                  <button onClick={handleSendMessage}>Send</button>
+                  <button onClick={handleSend}>Send</button>
                 </div>
               </>
             ) : (
-              <div className="no-chat-selected">
-                Select a user to start a chat.
-              </div>
+              <p className="no-chat-selected">Select a user to start chatting</p>
             )}
           </div>
         </div>
