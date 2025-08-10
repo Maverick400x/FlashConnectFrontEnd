@@ -8,12 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 export default function Register() {
-  const [fullName, setFullName] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
+  const [designation, setDesignation] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState(''); // 'weak', 'medium', 'strong'
+  const [passwordStrength, setPasswordStrength] = useState('');
 
   const navigate = useNavigate();
 
@@ -45,56 +45,47 @@ export default function Register() {
     }
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
-
-    const emailExists = users.some(user => user.email === email);
-    const usernameExists = users.some(user => user.username === username);
-
-    if (emailExists) {
-      toast.error('This email is already registered.');
-      return;
-    }
-
-    if (usernameExists) {
-      toast.error('This username is already taken.');
-      return;
-    }
 
     if (passwordStrength === 'weak') {
       toast.error('Please choose a stronger password.');
       return;
     }
 
-    const newUser = { fullName, username, email, password };
-    users.push(newUser);
-    localStorage.setItem('registeredUsers', JSON.stringify(users));
+    const payload = { name, email, password, designation };
 
-    toast.success('Registration successful! Redirecting to login...');
-    setTimeout(() => {
-      navigate('/login');
-    }, 2000);
+    try {
+      const res = await fetch('http://localhost:8081/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        toast.error(errData.message || 'Registration failed');
+        return;
+      }
+
+      toast.success('Registration successful! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 2000);
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Something went wrong during registration.');
+    }
   };
 
   return (
     <div className="form-container">
       <ToastContainer position="top-right" autoClose={2000} />
-      
       <h2>Register</h2>
       <form className="auth-form" onSubmit={handleRegister}>
         <input
           type="text"
           placeholder="Full Name"
-          value={fullName}
-          onChange={e => setFullName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          value={name}
+          onChange={e => setName(e.target.value)}
           required
         />
         <input
@@ -102,6 +93,13 @@ export default function Register() {
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Designation"
+          value={designation}
+          onChange={e => setDesignation(e.target.value)}
           required
         />
         <div className="password-wrapper">
@@ -122,7 +120,6 @@ export default function Register() {
           </button>
         </div>
 
-        {/* Password Strength Bar */}
         {password && (
           <div className="password-strength-bar">
             <div className="bar" style={getStrengthStyle(passwordStrength)}></div>

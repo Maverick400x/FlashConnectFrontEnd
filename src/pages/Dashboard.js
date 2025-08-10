@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
@@ -9,52 +9,70 @@ import "../styles/dashboard_1.css";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const [users] = useState([
-    "John Doe", "Jane Smith", "Alice Johnson", "Robert Brown",
-    "Emily Davis", "Michael Wilson", "Sarah Miller", "David Garcia",
-    "Laura Martinez", "James Anderson", "Linda Taylor", "William Thomas",
-    "Patricia Jackson", "Charles White", "Jessica Harris", "Daniel Clark",
-    "Matthew Lewis", "Christopher Robinson",
-  ]);
-
+  const [users, setUsers] = useState([]); // All users fetched initially
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // 🔍 Handle search input
-  const handleSearchChange = (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
+  // Fetch all users on component mount
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const res = await fetch("http://localhost:8081/api/users");
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const data = await res.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
 
-    if (term.trim() === "") {
+    fetchAllUsers();
+  }, []);
+
+  // Fetch search results when searchTerm changes
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
       setFilteredUsers([]);
-    } else {
-      const results = users.filter((user) =>
-        user.toLowerCase().includes(term.toLowerCase())
-      );
-      setFilteredUsers(results);
+      return;
     }
+
+    const fetchSearchResults = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:8081/api/users/search?query=${encodeURIComponent(searchTerm)}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch search results");
+        const data = await res.json();
+        setFilteredUsers(data);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    };
+
+    fetchSearchResults();
+  }, [searchTerm]);
+
+  // Helper to get display name safely
+  const getDisplayName = (user) => {
+    return user.fullName ?? user.name ?? user.username ?? "Unknown User";
   };
 
-  // 🔗 Handle connection request
+  // Connection request handler
   const handleConnect = (user) => {
-    alert(`🔗 Connection request sent to ${user}`);
+    alert(`🔗 Connection request sent to ${getDisplayName(user)}`);
   };
 
-  // 🔔 Navigate to messages
+  // Navigate to messages
   const handleBellClick = () => {
     navigate("/messages");
   };
 
   return (
     <div className="dashboard-container">
-      {/* Sidebar Navigation */}
       <Sidebar />
 
-      {/* Main Dashboard Content */}
       <main className="main-content">
-        
-        {/* 🔔 Notification Bell with Dropdown */}
         <div
           className="notification-bell-wrapper"
           onMouseEnter={() => setShowDropdown(true)}
@@ -77,23 +95,22 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* 👥 User Search Bar */}
         <div className="search-users">
           <input
             type="text"
             placeholder="Search users to connect..."
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
 
-          {/* 🔍 Dynamic Search Result List */}
-          {searchTerm && (
+          {/* Show filtered search results if searching, else show all users */}
+          {searchTerm ? (
             <ul className="search-results">
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user, index) => (
                   <li key={index} className="search-result-item">
-                    <span>{user}</span>
+                    <span style={{ color: 'black' }}>{getDisplayName(user)}</span>
                     <button
                       className="connect-button"
                       onClick={() => handleConnect(user)}
@@ -106,10 +123,25 @@ export default function Dashboard() {
                 <li className="no-results">No users found.</li>
               )}
             </ul>
+          ) : (
+            <ul className="search-results">
+              {users.length > 0 &&
+                users.map((user, index) => (
+                  <li key={index} className="search-result-item">
+                    <span style={{ color: 'black' }}>{getDisplayName(user)}</span>
+                    <button
+                      className="connect-button"
+                      onClick={() => handleConnect(user)}
+                    >
+                      Connect
+                    </button>
+                  </li>
+                ))
+              }
+            </ul>
           )}
         </div>
 
-        {/* 💼 Card Section */}
         <h2 className="section-title">Connect with Professionals</h2>
         <CardSection />
       </main>

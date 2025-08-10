@@ -4,53 +4,55 @@ import { useAuth } from '../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/login.css';
-
-// Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 export default function Login() {
-  const [identifier, setIdentifier] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [shake, setShake] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    const storedUsers = localStorage.getItem('registeredUsers');
-    const users = storedUsers ? JSON.parse(storedUsers) : [];
+    const payload = { email, password };
 
-    const existingUser = users.find(
-      (user) =>
-        (user.email === identifier || user.username === identifier) &&
-        user.password === password
-    );
-
-    if (!existingUser) {
-      toast.error('Invalid email/username or password.', {
-        position: 'top-right',
-        autoClose: 3000,
-        pauseOnHover: true,
+    try {
+      const res = await fetch('http://localhost:8081/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
-      return;
+
+      if (!res.ok) {
+        const errData = await res.json();
+        toast.error(errData.message || 'Invalid email or password.', {
+          position: 'top-right',
+          autoClose: 3000,
+          pauseOnHover: true
+        });
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+        return;
+      }
+
+      const data = await res.json(); // This should be UserResponseDTO
+      login(data);
+
+      toast.success('Login successful! Redirecting...', {
+        position: 'top-right',
+        autoClose: 2000,
+        pauseOnHover: false
+      });
+
+      setTimeout(() => navigate('/dashboard'), 2000);
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Something went wrong during login.');
     }
-
-    toast.success('Login successful! Redirecting...', {
-      position: 'top-right',
-      autoClose: 2000,
-      pauseOnHover: false,
-    });
-
-    login(existingUser);
-
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 2000);
   };
 
   return (
@@ -59,10 +61,10 @@ export default function Login() {
       <h2>Login</h2>
       <form className="auth-form" onSubmit={handleLogin}>
         <input
-          type="text"
-          placeholder="Email or Username"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className={shake ? 'error-input' : ''}
           required
         />

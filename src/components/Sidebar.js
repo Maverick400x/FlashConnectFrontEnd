@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa"; // Font Awesome icons
 import "../styles/dashboard.css";
 
-// Replace this URL with your default avatar image if needed
+// Default avatar image if user has no profile pic
 const DEFAULT_AVATAR =
   "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
@@ -20,13 +20,20 @@ export default function Sidebar() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
+    // Load user data from localStorage on component mount
     const storedUser = localStorage.getItem("authUser");
     if (storedUser) {
-      setUserData(JSON.parse(storedUser));
+      try {
+        setUserData(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Error parsing authUser from localStorage", err);
+        setUserData(null);
+      }
     }
   }, []);
 
   const handleLogout = () => {
+    // Clear user data and navigate to login page
     localStorage.removeItem("authUser");
     navigate("/login");
   };
@@ -38,7 +45,7 @@ export default function Sidebar() {
         <FaBolt className="sidebar-icon" /> Flash Connect
       </h2>
 
-      {/* User Info with Photo */}
+      {/* User Info */}
       {userData && (
         <div className="user-info">
           <img
@@ -46,8 +53,10 @@ export default function Sidebar() {
             alt="User Avatar"
             className="user-avatar"
           />
-          <p className="user-name">Welcome <strong>{userData.username}</strong></p>
-          <p className="user-email">Email : {userData.email}</p>
+          <p className="user-name">
+            Welcome <strong>{userData.fullName ?? userData.name ?? userData.username}</strong>
+          </p>
+          <p className="user-email">Email: {userData.email}</p>
         </div>
       )}
 
@@ -59,30 +68,35 @@ export default function Sidebar() {
         >
           <FaTachometerAlt className="sidebar-icon" /> Dashboard
         </NavLink>
+
         <NavLink
           to="/messages"
           className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
         >
           <FaEnvelope className="sidebar-icon" /> Messages
         </NavLink>
+
         <NavLink
           to="/profile"
           className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
         >
           <FaUser className="sidebar-icon" /> Profile
         </NavLink>
+
         <NavLink
           to="/settings"
           className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
         >
           <FaCog className="sidebar-icon" /> Settings
         </NavLink>
+
         <NavLink
           to="/help"
           className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
         >
           <FaQuestionCircle className="sidebar-icon" /> Help
         </NavLink>
+
         <button className="nav-item logout-button" onClick={handleLogout}>
           <FaSignOutAlt className="sidebar-icon" /> Logout
         </button>

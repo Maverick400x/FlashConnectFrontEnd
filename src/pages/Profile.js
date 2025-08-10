@@ -10,9 +10,9 @@ export default function Profile() {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
 
-  // Editable fields state
+  // Editable fields state (username removed)
   const [formData, setFormData] = useState({
-    username: user?.username || "",
+    name: user?.name || "",
     email: user?.email || "",
     profilePic: user?.profilePic || DEFAULT_AVATAR,
   });
@@ -36,10 +36,14 @@ export default function Profile() {
     });
   };
 
-  const handleSave = () => {
-    // Here you can call your API to update user profile
-    console.log("Updated Profile Data:", formData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      // TODO: Make an API call to update user profile
+      console.log("Updated Profile Data:", formData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
@@ -62,10 +66,10 @@ export default function Profile() {
             <>
               <input
                 type="text"
-                name="username"
-                value={formData.username}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                placeholder="Username"
+                placeholder="Full Name"
                 className="profile-input"
               />
               <input
@@ -87,7 +91,7 @@ export default function Profile() {
             </>
           ) : (
             <>
-              <h3>{user.username}</h3>
+              <h3>{user.name || "No Name Provided"}</h3>
               <p>Email: {user.email}</p>
             </>
           )}
@@ -97,8 +101,8 @@ export default function Profile() {
           <h4>Account Details</h4>
           <ul>
             <li>
-              <strong>Username:</strong>{" "}
-              {isEditing ? formData.username : user.username}
+              <strong>Name:</strong>{" "}
+              {isEditing ? formData.name : user.name || "Not provided"}
             </li>
             <li>
               <strong>Email:</strong>{" "}
