@@ -75,6 +75,7 @@ const getGreeting = () => {
             alt="User Avatar"
             className="user-avatar"
           />
+          <p style={{ fontSize: "14px", color: "#555" }}>{greeting} 👋</p>
           <p className="user-name">
             Welcome{" "}
             <u>
@@ -83,7 +84,7 @@ const getGreeting = () => {
               </strong>
             </u>
           </p>
-          <p style={{ fontSize: "14px", color: "#555" }}>{greeting} 👋</p>
+          
 
           {/* Followers and Following - Side by Side */}
           <div className="follow-stats-row">

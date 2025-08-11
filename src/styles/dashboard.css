@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background-color: #f7f9fc;
+  background-color: #f4f6fa;
   color: #1a1a1a;
   text-transform: capitalize;
 }
@@ -10,21 +10,23 @@ body {
 .dashboard-container {
   display: flex;
   height: 100vh;
+  background-color: #eef1f6; /* Soft dashboard background */
 }
 
 /* Sidebar */
 .sidebar {
   width: 220px;
-  background-color: #ffffff;
-  border-right: 1px solid #e0e0e0;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); /* Dark blue gradient */
+  border-right: none;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: white;
 }
 
 .logo {
-  color: #333;
+  color: #ffffff;
   font-size: 1.4rem;
   margin-bottom: 2rem;
 }
@@ -36,7 +38,7 @@ body {
 }
 
 .nav-item {
-  color: #555;
+  color: #cbd5e1;
   text-decoration: none;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
@@ -45,8 +47,8 @@ body {
 
 .nav-item:hover,
 .nav-item.active {
-  background-color: #e8f0fe;
-  color: #1a73e8;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
 .profile-avatar img {
@@ -63,7 +65,7 @@ body {
   flex-direction: column;
   gap: 2rem;
   overflow-y: auto;
-  background-color: #f7f9fc;
+  background-color: #f4f6fa; /* Subtle light gray */
 }
 
 /* Chat section */
@@ -76,7 +78,7 @@ body {
 
 .chat-section h3 {
   margin-top: 0;
-  color: #333;
+  color: #0f172a;
 }
 
 .chat-input-container {
@@ -96,12 +98,13 @@ body {
 
 .chat-input-container button {
   padding: 0.75rem 1rem;
-  background: #1a73e8;
+  background: #2563eb; /* Rich blue */
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
+
 /* Search Users Section */
 .search-users {
   width: 100%;
@@ -123,8 +126,8 @@ body {
 }
 
 .search-users input:focus {
-  border-color: #1a73e8;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .search-results {
@@ -160,11 +163,11 @@ body {
 }
 
 .search-results li:hover {
-  background-color: #f1f5fe;
+  background-color: #e0e7ff; /* Soft blue hover */
 }
 
 .connect-button {
-  background-color: #1a73e8;
+  background-color: #2563eb;
   color: #fff;
   border: none;
   padding: 6px 12px;
@@ -177,7 +180,7 @@ body {
 }
 
 .connect-button:hover {
-  background-color: #1558c0;
+  background-color: #1d4ed8;
 }
 
 /* Logout button */
@@ -185,7 +188,7 @@ body {
   margin-top: 2rem;
   padding: 0.5rem 0.75rem;
   border: none;
-  background-color: #ff4b4b;
+  background-color: #ef4444;
   color: #fff;
   border-radius: 6px;
   cursor: pointer;
@@ -193,9 +196,10 @@ body {
 }
 
 .logout-button:hover {
-  background-color: #d93d3d;
+  background-color: #dc2626;
   color: #fff;
 }
+
 /* notification bell */
 .notification-bell-wrapper {
   position: absolute;
@@ -208,7 +212,7 @@ body {
   font-size: 24px;
   cursor: pointer;
   position: relative;
-  color: #333;
+  color: #1e293b;
   display: flex;
   align-items: center;
 }
@@ -221,7 +225,7 @@ body {
   position: absolute;
   top: -6px;
   right: -10px;
-  background-color: red;
+  background-color: #ef4444;
   color: white;
   font-size: 11px;
   padding: 2px 6px;
@@ -258,10 +262,10 @@ body {
 
 .follow-stats-row {
   display: flex;
-  justify-content: center; /* Center items horizontally */
+  justify-content: center;
   gap: 15px;
   margin-top: 12px;
-  flex-wrap: wrap; /* Make it wrap nicely on small screens */
+  flex-wrap: wrap;
 }
 
 .follow-item {
@@ -279,7 +283,7 @@ body {
 }
 
 .follow-item:hover {
-  background: #f0f0f0;
+  background: #e0e7ff;
 }
 
 .follow-item i,
@@ -291,4 +295,3 @@ body {
 .follow-item span {
   color: #333;
 }
-
