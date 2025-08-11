@@ -18,7 +18,22 @@ const DEFAULT_AVATAR =
 export default function Sidebar() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
+  const [greeting, setGreeting] = useState("");
 
+  // Function to get greeting based on IST
+  // Function to get greeting based on IST
+const getGreeting = () => {
+  const now = new Date();
+  const istTime = new Date(now.getTime() + 5.5 * 60 * 60 * 1000); // UTC+5:30
+  const hour = istTime.getUTCHours();
+
+  if (hour >= 5 && hour < 12) return "Good Morning";
+  if (hour >= 12 && hour < 17) return "Good Afternoon";
+  if (hour >= 17 && hour < 21) return "Good Evening";
+  return "Good Night";
+};
+
+  // Load user from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("authUser");
     if (storedUser) {
@@ -29,6 +44,15 @@ export default function Sidebar() {
         setUserData(null);
       }
     }
+  }, []);
+
+  // Update greeting every minute
+  useEffect(() => {
+    setGreeting(getGreeting());
+    const interval = setInterval(() => {
+      setGreeting(getGreeting());
+    }, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogout = () => {
@@ -52,9 +76,14 @@ export default function Sidebar() {
             className="user-avatar"
           />
           <p className="user-name">
-            Welcome <strong>{userData.fullName ?? userData.name ?? userData.username}</strong>
+            Welcome{" "}
+            <u>
+              <strong>
+                {userData.fullName ?? userData.name ?? userData.username}
+              </strong>
+            </u>
           </p>
-          {/* <p className="user-email">Email: {userData.email}</p> */}
+          <p style={{ fontSize: "14px", color: "#555" }}>{greeting} 👋</p>
 
           {/* Followers and Following - Side by Side */}
           <div className="follow-stats-row">
