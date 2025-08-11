@@ -4,26 +4,34 @@ import "../styles/messages.css";
 import { FaVideo } from "react-icons/fa";
 
 export default function Messages() {
-  const [users, setUsers] = useState([]);
+  const [connectedUsers, setConnectedUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const loggedUserId = 1; // Replace with the actual logged-in user's ID
 
-  // Fetch all users
+  // Get logged-in user from localStorage
+  const loggedUser = JSON.parse(localStorage.getItem("authUser")) || {};
+  const loggedUserId = loggedUser.id;
+
+  // Fetch connected users
   useEffect(() => {
-    async function fetchUsers() {
+    if (!loggedUserId) return;
+
+    async function fetchConnectedUsers() {
       try {
-        const res = await fetch("http://localhost:8081/api/users");
-        if (!res.ok) throw new Error("Failed to fetch users");
+        const res = await fetch(
+          `http://localhost:8081/api/connections/connected/${loggedUserId}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch connected users");
         const data = await res.json();
-        setUsers(data);
+        setConnectedUsers(data);
       } catch (err) {
-        console.error("Error fetching users:", err);
+        console.error("Error fetching connected users:", err);
       }
     }
-    fetchUsers();
-  }, []);
+
+    fetchConnectedUsers();
+  }, [loggedUserId]);
 
   // Fetch chat history when a user is selected
   useEffect(() => {
@@ -42,27 +50,29 @@ export default function Messages() {
       }
     }
     fetchChat();
-  }, [selectedUser]);
+  }, [selectedUser, loggedUserId]);
 
   // Send message
   async function handleSend() {
     if (!newMessage.trim() || !selectedUser) return;
     try {
-      const res = await fetch("http://localhost:8081/api/messages/sendMessages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderId: loggedUserId,
-          recipientId: selectedUser.id,
-          content: newMessage,
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:8081/api/messages/sendMessages",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            senderId: loggedUserId,
+            recipientId: selectedUser.id,
+            content: newMessage,
+          }),
+        }
+      );
       if (!res.ok) throw new Error("Failed to send message");
 
-      // Refresh messages after sending
+      const sentMsg = await res.json();
+      setMessages((prev) => [...prev, sentMsg]);
       setNewMessage("");
-      const updatedMessages = await res.json();
-      setMessages((prev) => [...prev, updatedMessages]);
     } catch (err) {
       console.error("Error sending message:", err);
     }
@@ -79,20 +89,24 @@ export default function Messages() {
       <Sidebar />
       <main className="main-content">
         <div className="messages-wrapper">
-          {/* Left: User List */}
+          {/* Left: Connected Users */}
           <div className="user-list">
-            {users.map((user) => (
-              <div
-                key={user.id}
-                className={`user-item ${
-                  selectedUser?.id === user.id ? "active" : ""
-                }`}
-                onClick={() => setSelectedUser(user)}
-              >
-                <h4>{user.username}</h4>
-                <p>{user.email}</p>
-              </div>
-            ))}
+            {connectedUsers.length > 0 ? (
+              connectedUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className={`user-item ${
+                    selectedUser?.id === user.id ? "active" : ""
+                  }`}
+                  onClick={() => setSelectedUser(user)}
+                >
+                  <h4>{user.username}</h4>
+                  <p>{user.email}</p>
+                </div>
+              ))
+            ) : (
+              <p>No connected users.</p>
+            )}
           </div>
 
           {/* Right: Chat View */}
@@ -101,7 +115,10 @@ export default function Messages() {
               <>
                 <div className="chat-header">
                   <h3>{selectedUser.username}</h3>
-                  <button className="video-call-button" onClick={handleVideoCall}>
+                  <button
+                    className="video-call-button"
+                    onClick={handleVideoCall}
+                  >
                     <FaVideo className="video-icon" />
                   </button>
                 </div>
@@ -132,7 +149,9 @@ export default function Messages() {
                 </div>
               </>
             ) : (
-              <p className="no-chat-selected">Select a user to start chatting</p>
+              <p className="no-chat-selected">
+                Select a connected user to start chatting
+              </p>
             )}
           </div>
         </div>
