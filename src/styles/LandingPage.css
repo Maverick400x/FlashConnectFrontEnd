@@ -1,0 +1,159 @@
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reset and base */
+* {
+  box-sizing: border-box;
+}
+
+.landing-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Overlay ensures dark translucent background */
+.overlay {
+  color: white;
+  min-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make navbar background black */
+.navbar {
+  background-color: black !important;
+}
+
+/* Navbar tweaks */
+.navbar-brand {
+  letter-spacing: 2px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.navbar-nav .nav-link {
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: #00bfa6 !important;
+}
+
+/* Header content (Hero) */
+.header-content h1 {
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.header-content p.lead {
+  color: #d0d0d0;
+}
+
+/* Buttons */
+.btn-success {
+  background-color: #00bfa6;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #009e8c;
+  box-shadow: 0 0 8px rgba(0, 191, 166, 0.6);
+}
+
+/* Section titles */
+h2 {
+  font-weight: 700;
+  border-bottom: 2px solid #00bfa6;
+  padding-bottom: 8px;
+}
+
+/* Cards in Services Section */
+.card.bg-dark {
+  background-color: rgba(20, 30, 50, 0.8);
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.bg-dark:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 191, 166, 0.5);
+}
+
+/* Form labels */
+.form-label {
+  font-weight: 600;
+  color: white;
+}
+
+/* Form controls */
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #00bfa6;
+  color: white;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-control::placeholder {
+  color: #c0c0c0;
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #00bfa6;
+  box-shadow: 0 0 8px rgba(0, 191, 166, 0.7);
+  color: white;
+}
+
+/* Textarea */
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Fade-in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation-name: fadeInUp;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .overlay {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+
+  .header-content {
+    margin-bottom: 3rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content h1 {
+    font-size: 2rem !important;
+  }
+
+  .btn-success {
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
