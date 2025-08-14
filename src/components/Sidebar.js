@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom"; // ✅ Added Link
 import {
   FaTachometerAlt,
   FaEnvelope,
@@ -20,20 +20,17 @@ export default function Sidebar() {
   const [userData, setUserData] = useState(null);
   const [greeting, setGreeting] = useState("");
 
-  // Function to get greeting based on IST
-  // Function to get greeting based on IST
-const getGreeting = () => {
-  const now = new Date();
-  const istTime = new Date(now.getTime() + 5.5 * 60 * 60 * 1000); // UTC+5:30
-  const hour = istTime.getUTCHours();
+  const getGreeting = () => {
+    const now = new Date();
+    const istTime = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+    const hour = istTime.getUTCHours();
 
-  if (hour >= 5 && hour < 12) return "Good Morning";
-  if (hour >= 12 && hour < 17) return "Good Afternoon";
-  if (hour >= 17 && hour < 21) return "Good Evening";
-  return "Good Night";
-};
+    if (hour >= 5 && hour < 12) return "Good Morning";
+    if (hour >= 12 && hour < 17) return "Good Afternoon";
+    if (hour >= 17 && hour < 21) return "Good Evening";
+    return "Good Night";
+  };
 
-  // Load user from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("authUser");
     if (storedUser) {
@@ -46,7 +43,6 @@ const getGreeting = () => {
     }
   }, []);
 
-  // Update greeting every minute
   useEffect(() => {
     setGreeting(getGreeting());
     const interval = setInterval(() => {
@@ -62,10 +58,19 @@ const getGreeting = () => {
 
   return (
     <aside className="sidebar">
-      {/* App Logo */}
-      <h2 className="logo">
-        <FaBolt className="sidebar-icon" /> Flash Connect
-      </h2>
+      {/* App Logo as clickable link */}
+      <Link
+      className="logo fw-bold fs-4"
+      to="/dashboard"
+      style={{
+        color: "white",
+        textDecoration: "underline",
+        textDecorationColor: "rgb(86, 188, 167)",
+        textUnderlineOffset: "4px",
+      }}
+    >
+      ⚡ Flash Connect
+    </Link>
 
       {/* User Info */}
       {userData && (
@@ -75,26 +80,31 @@ const getGreeting = () => {
             alt="User Avatar"
             className="user-avatar"
           />
-          <p style={{ fontSize: "14px", color: "#555" }}>{greeting} 👋</p>
+          <p style={{ fontSize: "14px", color: "#555" }}>
+            {greeting} 👋
+          </p>
           <p className="user-name">
-            Welcome{" "}
+            Hello,{" "}
             <u>
               <strong>
                 {userData.fullName ?? userData.name ?? userData.username}
               </strong>
             </u>
           </p>
-          
 
-          {/* Followers and Following - Side by Side */}
+          {/* Followers and Following */}
           <div className="follow-stats-row">
             <div className="follow-item">
               <FaUserFriends className="follow-icon" />
-              <span><strong>{userData.followers ?? 0}</strong> Followers</span>
+              <span>
+                <strong>{userData.followers ?? 0}</strong> Followers
+              </span>
             </div>
             <div className="follow-item">
               <FaUserFriends className="follow-icon" />
-              <span><strong>{userData.following ?? 0}</strong> Following</span>
+              <span>
+                <strong>{userData.following ?? 0}</strong> Following
+              </span>
             </div>
           </div>
         </div>

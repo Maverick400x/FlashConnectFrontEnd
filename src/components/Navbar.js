@@ -1,42 +1,50 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import '../styles/navbar.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
-        <Link to="/">Flash Connect</Link>
+    <nav className="navbar navbar-expand-lg navbar-dark fixed-top bg-transparent px-4">
+      <Link className="navbar-brand fw-bold fs-3" to="/">
+        ⚡ Flash Connect
+      </Link>
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
+
+      <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul className="navbar-nav align-items-center gap-3">
+          <li className="nav-item">
+            <a className="nav-link text-white" href="#services">
+              Services
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link text-white" href="#about">
+              About Us
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link text-white" href="#contact">
+              Contact
+            </a>
+          </li>
+          <li className="nav-item">
+            <Link to="/login" className="btn btn-success px-4">
+              Login
+            </Link>
+          </li>
+        </ul>
       </div>
-      <ul className="navbar-links">
-        {user ? (
-          <>
-            <li>
-              <button className="nav-button" onClick={handleLogout}>
-                Logout
-              </button>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <Link to="/register" className="nav-link">Register</Link>
-            </li>
-            <li>
-              <Link to="/login" className="nav-link">Login</Link>
-            </li>
-          </>
-        )}
-      </ul>
     </nav>
   );
 }

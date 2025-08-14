@@ -132,8 +132,14 @@ export default function Register() {
           color: 'white',
         }}
       >
-        <ToastContainer position="top-right" autoClose={2000} />
-        <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Register</h2>
+        {/* Toasts slightly lower */}
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          style={{ marginTop: '70px' }}
+        />
+
+        <h2 style={{ marginBottom: '1.5rem', textAlign: 'center',color:"white" }}>Register</h2>
         <form className="auth-form" onSubmit={handleRegister}>
           <input
             type="text"
@@ -211,7 +217,13 @@ export default function Register() {
               ></div>
               <span
                 className="strength-label"
-                style={{ color: 'white', fontWeight: '600', fontSize: '0.8rem', display: 'block', marginTop: '4px' }}
+                style={{
+                  color: 'white',
+                  fontWeight: '600',
+                  fontSize: '0.8rem',
+                  display: 'block',
+                  marginTop: '4px',
+                }}
               >
                 {passwordStrength.toUpperCase()}
               </span>
@@ -231,15 +243,25 @@ export default function Register() {
               cursor: 'pointer',
               transition: 'background-color 0.3s ease',
             }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#009e8c')}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#00bfa6')}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = '#009e8c')
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = '#00bfa6')
+            }
           >
             Register
           </button>
         </form>
-        <p className="form-footer" style={{ textAlign: 'center', marginTop: '1rem' }}>
+        <p
+          className="form-footer"
+          style={{ textAlign: 'center', marginTop: '1rem' }}
+        >
           Already have an account?{' '}
-          <Link to="/login" style={{ color: '#00bfa6', textDecoration: 'underline' }}>
+          <Link
+            to="/login"
+            style={{ color: '#00bfa6', textDecoration: 'underline' }}
+          >
             Login
           </Link>
         </p>

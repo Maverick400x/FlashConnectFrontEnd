@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar"; // ✅ Import the new component
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import {
@@ -12,7 +13,7 @@ import {
   FaCogs,
   FaLock,
   FaHeadset,
-} from "react-icons/fa"; // Added icons for Why Choose Us
+} from "react-icons/fa";
 import "../styles/LandingPage.css";
 
 const experts = [
@@ -72,51 +73,8 @@ export default function LandingPage() {
           overflowY: "auto",
         }}
       >
-        {/* Navbar */}
-        <nav className="navbar navbar-expand-lg navbar-dark fixed-top bg-transparent px-4">
-          <Link className="navbar-brand fw-bold fs-3" to="/">
-            ⚡ Flash Connect
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-
-          <div
-            className="collapse navbar-collapse justify-content-end"
-            id="navbarNav"
-          >
-            <ul className="navbar-nav align-items-center gap-3">
-              <li className="nav-item">
-                <a className="nav-link text-white" href="#services">
-                  Services
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link text-white" href="#about">
-                  About Us
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link text-white" href="#contact">
-                  Contact
-                </a>
-              </li>
-              <li className="nav-item">
-                <Link to="/login" className="btn btn-success px-4">
-                  Login
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
+        {/* ✅ Navbar Component */}
+        <Navbar />
 
         {/* Hero Content */}
         <header
@@ -128,8 +86,7 @@ export default function LandingPage() {
           </h1>
           <p className="lead text-white mb-4">
             We help businesses unlock their potential with expert consultancy
-            services. Strategy, technology, and innovation — all tailored to your
-            success.
+            services. Strategy, technology, and innovation — all tailored to your success.
           </p>
           <Link to="/register" className="btn btn-success btn-lg">
             Schedule a Consultation

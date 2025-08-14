@@ -66,7 +66,7 @@ export default function Login() {
         backgroundPosition: "center",
         position: "relative",
         color: "white",
-        paddingTop: "56px", // space for fixed navbar height
+        paddingTop: "56px",
       }}
     >
       {/* Navbar */}
@@ -110,8 +110,10 @@ export default function Login() {
           marginTop: "3rem",
         }}
       >
-        <ToastContainer />
-        <h2 style={{ marginBottom: "1.5rem", textAlign: "center" }}>Login</h2>
+        <ToastContainer
+          style={{ marginTop: '60px' }} // 👈 pushes toast down
+        />
+        <h2 style={{ marginBottom: "1.5rem", textAlign: "center", color: "white" }}>Login</h2>
         <form className="auth-form" onSubmit={handleLogin}>
           <input
             type="email"

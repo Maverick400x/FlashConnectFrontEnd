@@ -5,6 +5,7 @@ import UserSearch from "../components/UserSearch";
 import Notifications from "../components/Notifications";
 import ConnectionRequests from "../components/ConnectionRequests"; // <-- import here
 import "../styles/dashboard.css";
+import "../styles/Sidebar.css";
 import "../styles/dashboard_1.css";
 import { toast, Toaster } from "react-hot-toast";
 
