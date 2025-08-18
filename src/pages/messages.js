@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import "../styles/messages.css";
 import { FaVideo } from "react-icons/fa";
-import { Helmet } from "react-helmet";  // ✅ Import Helmet
 
 export default function Messages() {
   const [connectedUsers, setConnectedUsers] = useState([]);
@@ -87,16 +86,8 @@ export default function Messages() {
 
   return (
     <div className="dashboard-container">
-      {/* ✅ Title for this page */}
-      <Helmet>
-        <title>Messages | FlashConnect</title>
-      </Helmet>
-
       <Sidebar />
       <main className="main-content">
-        {/* ✅ Page Heading */}
-        <h2 className="page-title">Messages</h2>
-
         <div className="messages-wrapper">
           {/* Left: Connected Users */}
           <div className="user-list">
