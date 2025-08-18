@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate, Link } from "react-router-dom"; // ✅ Added Link
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import {
   FaTachometerAlt,
   FaEnvelope,
@@ -7,7 +7,6 @@ import {
   FaCog,
   FaQuestionCircle,
   FaSignOutAlt,
-  FaBolt,
   FaUserFriends,
 } from "react-icons/fa";
 import "../styles/dashboard.css";
@@ -20,6 +19,7 @@ export default function Sidebar() {
   const [userData, setUserData] = useState(null);
   const [greeting, setGreeting] = useState("");
 
+  // ✅ Greeting logic
   const getGreeting = () => {
     const now = new Date();
     const istTime = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
@@ -27,15 +27,31 @@ export default function Sidebar() {
 
     if (hour >= 5 && hour < 12) return "Good Morning";
     if (hour >= 12 && hour < 17) return "Good Afternoon";
-    if (hour >= 17 && hour < 21) return "Good Evening";
-    return "Good Night";
+    // if (hour >= 17 && hour < 21) return "Good Evening";
+    return "Good Evening";
   };
 
+  // ✅ Fetch fresh user profile from backend
   useEffect(() => {
     const storedUser = localStorage.getItem("authUser");
     if (storedUser) {
       try {
-        setUserData(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+
+        // Fetch profile with counts
+        fetch(`http://localhost:8081/api/users/${parsedUser.id}`)
+          .then((res) => {
+            if (!res.ok) throw new Error("Failed to fetch user profile");
+            return res.json();
+          })
+          .then((profile) => {
+            console.log("📌 Sidebar fetched user profile:", profile);
+            setUserData(profile);
+          })
+          .catch((err) => {
+            console.error("Error fetching user profile:", err);
+            setUserData(parsedUser); // fallback
+          });
       } catch (err) {
         console.error("Error parsing authUser from localStorage", err);
         setUserData(null);
@@ -43,6 +59,7 @@ export default function Sidebar() {
     }
   }, []);
 
+  // ✅ Greeting refresh
   useEffect(() => {
     setGreeting(getGreeting());
     const interval = setInterval(() => {
@@ -58,19 +75,19 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      {/* App Logo as clickable link */}
+      {/* App Logo */}
       <Link
-      className="logo fw-bold fs-4"
-      to="/dashboard"
-      style={{
-        color: "white",
-        textDecoration: "underline",
-        textDecorationColor: "rgb(86, 188, 167)",
-        textUnderlineOffset: "4px",
-      }}
-    >
-      ⚡ Flash Connect
-    </Link>
+        className="logo fw-bold fs-4"
+        to="/dashboard"
+        style={{
+          color: "white",
+          textDecoration: "underline",
+          textDecorationColor: "rgb(86, 188, 167)",
+          textUnderlineOffset: "4px",
+        }}
+      >
+        ⚡ Flash Connect
+      </Link>
 
       {/* User Info */}
       {userData && (
@@ -80,9 +97,7 @@ export default function Sidebar() {
             alt="User Avatar"
             className="user-avatar"
           />
-          <p style={{ fontSize: "14px", color: "#555" }}>
-            {greeting} 👋
-          </p>
+          <p style={{ fontSize: "14px", color: "#555" }}>{greeting} 👋</p>
           <p className="user-name">
             Hello,{" "}
             <u>
@@ -92,18 +107,18 @@ export default function Sidebar() {
             </u>
           </p>
 
-          {/* Followers and Following */}
+          {/* Followers / Following (live counts from backend) */}
           <div className="follow-stats-row">
             <div className="follow-item">
               <FaUserFriends className="follow-icon" />
               <span>
-                <strong>{userData.followers ?? 0}</strong> Followers
+                <strong>{userData.followersCount ?? 0}</strong> Followers
               </span>
             </div>
             <div className="follow-item">
               <FaUserFriends className="follow-icon" />
               <span>
-                <strong>{userData.following ?? 0}</strong> Following
+                <strong>{userData.followingCount ?? 0}</strong> Following
               </span>
             </div>
           </div>

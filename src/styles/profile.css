@@ -77,3 +77,25 @@
   background-color: #dc3545;
   color: white;
 }
+
+.profile-stats {
+  display: flex;
+  gap: 30px;
+  margin: 15px 0;
+  justify-content: center;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-item strong {
+  display: block;
+  font-size: 20px;
+  color: #222;
+}
+
+.stat-item span {
+  font-size: 14px;
+  color: #777;
+}
